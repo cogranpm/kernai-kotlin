@@ -29,7 +29,7 @@ class MainWindow : ApplicationWindow(null) {
         mainContainer.layout = FillLayout(SWT.VERTICAL)
 
         val lblName: Label = getLabel("fred", navContainer)
-        val lblAddress: Label = getLabel("9999999999", mainContainer)
+        val lblAddress: DocumentView = DocumentView(mainContainer)
         return container
     }
 
