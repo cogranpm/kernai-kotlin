@@ -6,19 +6,16 @@ fun main() {
 
 
     val display: Display = Display.getDefault()
-    Realm.runWithDefault(DisplayRealm.getRealm(display), object: Runnable {
-        override fun run() : Unit {
+    Realm.runWithDefault(DisplayRealm.getRealm(display)) {
         try {
             val window = MainWindow()
-           window.setBlockOnOpen(true)
+            window.setBlockOnOpen(true)
             window.open()
             Display.getCurrent().dispose()
         } catch (ex: Exception){
-           //
+            //
         }
     }
-    })
-
 
 
 }
