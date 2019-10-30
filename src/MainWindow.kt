@@ -1,21 +1,31 @@
 
-import org.eclipse.jface.action.MenuManager
-import org.eclipse.jface.action.Separator
-import org.eclipse.jface.action.StatusLineManager
-import org.eclipse.jface.action.ToolBarManager
+import org.eclipse.jface.action.*
+import org.eclipse.jface.resource.ImageDescriptor
 import org.eclipse.jface.window.ApplicationWindow
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Point
-import org.eclipse.swt.widgets.Composite
-import org.eclipse.swt.widgets.Control
-import org.eclipse.swt.widgets.Label
-import org.eclipse.swt.widgets.Shell
 import org.eclipse.nebula.widgets.pshelf.*
 import org.eclipse.swt.custom.SashForm
 import org.eclipse.swt.layout.FillLayout
+import java.io.IOException
+import java.io.File
+import org.eclipse.jface.resource.ImageDescriptor.createFromFile
+import org.eclipse.swt.widgets.*
 
 
-class MainWindow : ApplicationWindow(null) {
+class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
+
+
+
+    init {
+        addMenuBar()
+        addToolBar(SWT.WRAP)
+        addStatusLine()
+
+    }
+
+
+
 
     override fun createContents(parent: Composite?): Control {
         val container = Composite(parent, SWT.NONE)
@@ -34,9 +44,27 @@ class MainWindow : ApplicationWindow(null) {
     }
 
     override fun createMenuManager(): MenuManager {
-        val menuManager = MenuManager("Menu")
+
+       val actionOpenFile: Action = object : Action("Open") {
+            override fun run() {
+                val dialog = FileDialog(shell, SWT.OPEN)
+                val file = dialog.open()
+                if (file != null) {
+                    try {
+                        setStatus("File loaded successfully")
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        setStatus("Failed to load file")
+                    }
+
+                }
+            }
+        }
+
+        val menuManager = MenuManager("")
         val fileMenu = MenuManager("&File")
         fileMenu.add(Separator())
+        fileMenu.add(actionOpenFile)
         menuManager.add(fileMenu)
         return menuManager
     }
@@ -53,10 +81,13 @@ class MainWindow : ApplicationWindow(null) {
         return StatusLineManager()
     }
 
+
     override fun configureShell(shell: Shell?) {
         super.configureShell(shell)
         shell?.text = "Kernai Kotlin"
     }
+
+
 
     override fun getInitialSize(): Point {
         return Point(900, 900)
