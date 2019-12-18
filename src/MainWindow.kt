@@ -11,35 +11,35 @@ import java.io.IOException
 import java.io.File
 import org.eclipse.jface.resource.ImageDescriptor.createFromFile
 import org.eclipse.swt.widgets.*
-
+import org.eclipse.swt.graphics.Image
 
 class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
 
-
+    lateinit var mainContainer: Composite
 
     init {
         addMenuBar()
         addToolBar(SWT.WRAP)
         addStatusLine()
-
     }
-
-
 
 
     override fun createContents(parent: Composite?): Control {
         val container = Composite(parent, SWT.NONE)
         container.layout = FillLayout()
-        val sashForm: SashForm = SashForm(container, SWT.HORIZONTAL)
+        val sashForm: SashForm = SashForm(container, SWT.HORIZONTAL or (SWT.BORDER))
+        sashForm.sashWidth = 10
         val weights: Array<Int> = arrayOf(1, 2)
         val navContainer: Composite = Composite(sashForm, SWT.NONE)
-        val mainContainer = Composite(sashForm, SWT.NONE)
+        mainContainer = Composite(sashForm, SWT.NONE)
         sashForm.weights = weights.toIntArray()
         navContainer.layout= FillLayout(SWT.VERTICAL)
         mainContainer.layout = FillLayout(SWT.VERTICAL)
 
         val lblName: Label = getLabel("fred", navContainer)
         val lblAddress: DocumentView = DocumentView(mainContainer)
+
+
         return container
     }
 
@@ -48,7 +48,7 @@ class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
 
        val actionOpenFile: Action = object : Action("Open") {
             override fun run() {
-                val dialog = FileDialog(shell, SWT.OPEN)
+                val dialog = FileDialog(shell, SWT.OPEN )
                 val file = dialog.open()
                 if (file != null) {
                     try {
@@ -69,12 +69,29 @@ class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
         }
         actionQuit.accelerator = SWT.MOD1 or('Q'.toInt())
 
+        val actionChristmasTree: Action = object: Action ("&Christmas Tree") {
+            override fun run () {
+                clearComposite(mainContainer)
+                val christmas: ChristmasTreeView = ChristmasTreeView(mainContainer)
+                mainContainer.layout()
+            }
+        }
+        actionChristmasTree.accelerator = SWT.MOD1 or ('X'.toInt())
+
         val menuManager = MenuManager("")
         val fileMenu = MenuManager("&File")
+        val actionMenu = MenuManager("&Action")
+
+        // file menus
         fileMenu.add(Separator())
         fileMenu.add(actionOpenFile)
         fileMenu.add(actionQuit)
+
+        // action menus
+        actionMenu.add(actionChristmasTree)
+
         menuManager.add(fileMenu)
+        menuManager.add(actionMenu)
         return menuManager
     }
 
@@ -94,6 +111,12 @@ class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
     override fun configureShell(shell: Shell?) {
         super.configureShell(shell)
         shell?.text = "Kernai Kotlin"
+
+        ApplicationData.setupImages()
+        val activitySmall: Image = ApplicationData.getImage(ApplicationData.IMAGE_ACTVITY_SMALL)
+        val activityLarge: Image = ApplicationData.getImage(ApplicationData.IMAGE_ACTIVITY_LARGE)
+        val images = arrayOf<Image>(activitySmall, activityLarge)
+        shell?.images = images
     }
 
 

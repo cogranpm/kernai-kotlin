@@ -9,4 +9,10 @@ fun getLabel(caption: String, parent: Composite ) : Label {
     return label
 }
 
+fun clearComposite(composite: Composite) {
+    for(child: Control in composite.children){
+        child.dispose()
+    }
+}
+
 

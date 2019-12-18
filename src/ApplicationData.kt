@@ -6,8 +6,7 @@ import org.eclipse.swt.graphics.Image
 
 object ApplicationData {
 
-    init { setupImages()}
-    private val  imageRegistry: ImageRegistry =  ImageRegistry()
+    private var imageRegistry: ImageRegistry = ImageRegistry()
     const val  IMAGE_ACTVITY_SMALL = "activitysmall"
     const val IMAGE_ACTIVITY_LARGE = "activitylarge"
     const val  IMAGE_STOCK_INFO = "stock_info"
@@ -15,7 +14,14 @@ object ApplicationData {
     const val  IMAGE_GOUP = "goup"
     const val IMAGES_PATH = "/images/"
 
-    private fun setupImages() {
+
+    init {
+
+    }
+
+
+
+    fun setupImages() {
         try {
             putImage(IMAGE_ACTVITY_SMALL, "Activity_16xSM.png")
             putImage(IMAGE_ACTIVITY_LARGE, "Activity_32x.png")
@@ -28,16 +34,15 @@ object ApplicationData {
         }
     }
 
-    private fun putImage(key: String, filename: String) {
-        try {
-            val path: String = IMAGES_PATH + filename
-            imageRegistry.put(key, ImageDescriptor.createFromFile(ApplicationData.javaClass, path))
-        } catch ( e: Exception) {
-            println(e)
-        }
+    private fun putImage(key: String, filename: String) = try {
+        val path: String = IMAGES_PATH + filename
+        this.imageRegistry.put(key, ImageDescriptor.createFromFile(ApplicationData.javaClass, path))
+    } catch ( e: Exception) {
+        println(e)
     }
 
-    public fun getImage(name: String): Image =
-        imageRegistry.get(name)
+    public fun getImage(name: String): Image {
+        return this.imageRegistry.get(name)
+    }
 
 }
