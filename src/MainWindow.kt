@@ -44,6 +44,7 @@ class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
     }
 
     override fun createMenuManager(): MenuManager {
+        val win = this
 
        val actionOpenFile: Action = object : Action("Open") {
             override fun run() {
@@ -61,10 +62,18 @@ class MainWindow (parentShell: Shell?): ApplicationWindow(parentShell) {
             }
         }
 
+        val actionQuit: Action = object : Action("&Quit") {
+            override fun run() {
+                win.close()
+            }
+        }
+        actionQuit.accelerator = SWT.MOD1 or('Q'.toInt())
+
         val menuManager = MenuManager("")
         val fileMenu = MenuManager("&File")
         fileMenu.add(Separator())
         fileMenu.add(actionOpenFile)
+        fileMenu.add(actionQuit)
         menuManager.add(fileMenu)
         return menuManager
     }

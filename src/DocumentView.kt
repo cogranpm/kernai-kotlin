@@ -9,7 +9,7 @@ class DocumentView (parent: Composite) : Composite(parent, SWT.NONE) {
 
     init {
         val document: IDocument = Document()
-        document.set("big deal here guys")
+        document.set("big deal here five guys")
         layout = FillLayout(SWT.VERTICAL)
         val VERTICAL_RULER_WIDTH = 12
         val overviewRuler = OverviewRuler(null, VERTICAL_RULER_WIDTH, null)
